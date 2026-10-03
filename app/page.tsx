@@ -1,3 +1,7 @@
+import { Button } from "@/components/ui/button";
+
 export default function Home() {
-  return <div>Hello rent aero</div>;
+  return <div>
+    <Button variant="default">Hello</Button>  
+  </div>;
 }
