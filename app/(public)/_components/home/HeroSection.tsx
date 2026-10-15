@@ -4,7 +4,7 @@ import { ArrowRight, ShieldCheck, Star, Zap } from "lucide-react";
 
 export default function HeroSection() {
   return (
-    <section className="relative overflow-hidden bg-background py-20 lg:py-32 border-b">
+    <section className="relative overflow-hidden bg-background py-10 lg:py-16 border-b">
       {/* Background Glow Effect */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-125 h-125 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
 

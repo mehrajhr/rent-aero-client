@@ -1,6 +1,7 @@
-import HeroSection from "@/components/home/HeroSection";
-import HowItWorks from "@/components/home/HowItWorks";
-import WhyChooseUs from "@/components/home/WhyChooseUs";
+import HeroSection from "./_components/home/HeroSection";
+import HowItWorks from "./_components/home/HowItWorks";
+import WhyChooseUs from "./_components/home/WhyChooseUs";
+
 
 
 export default function Home() {
