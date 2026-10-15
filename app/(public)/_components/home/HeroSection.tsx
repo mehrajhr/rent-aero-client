@@ -93,7 +93,7 @@ export default function HeroSection() {
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Daily Rate</span>
-                  <span className="font-bold text-primary">৳250.00 / day</span>
+                  <span className="font-bold text-primary">$50.00 / day</span>
                 </div>
                 <Button asChild className="w-full" variant="secondary">
                   <Link href="/gear">View Details</Link>

@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { Badge } from "@/components/ui/badge";
-import { Star, User, Tag, CheckCircle2, XCircle } from "lucide-react";
+import { Star, User, Tag, CheckCircle2, XCircle, MessageSquare } from "lucide-react";
 import RentNowSection from "./_components/RentNowSection";
 import { fetchSingleGearItem } from "../../_action/gearActions";
 import { IGearItem } from "../../_types/gear.types";
@@ -11,7 +11,10 @@ interface DetailsPageProps {
 
 export default async function GearDetailsPage({ params }: DetailsPageProps) {
   const { id } = await params;
-  const gear: IGearItem | null = await fetchSingleGearItem(id);
+  const response = await fetchSingleGearItem(id);
+
+  // Api response theke data object extract kora
+  const gear: IGearItem | null = response?.data || response;
 
   if (!gear) {
     notFound();
@@ -21,7 +24,10 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
     <div className="container mx-auto px-4 md:px-8 py-12">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-10">
         
+        {/* Left Side: Info, Specs & Reviews (8 cols) */}
         <div className="lg:col-span-8 space-y-8">
+          
+          {/* Main Info Card */}
           <div className="rounded-2xl border bg-card p-8 space-y-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2">
@@ -53,6 +59,7 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
               {gear.description}
             </p>
 
+            {/* Provider Info */}
             <div className="rounded-xl border p-4 flex items-center gap-4 bg-muted/30">
               <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
                 <User className="h-5 w-5" />
@@ -64,6 +71,7 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
             </div>
           </div>
 
+          {/* Technical Specifications */}
           {gear.specifications && Object.keys(gear.specifications).length > 0 && (
             <div className="rounded-2xl border bg-card p-8 space-y-4 shadow-sm">
               <h3 className="font-bold text-xl tracking-tight">Technical Specifications</h3>
@@ -77,8 +85,58 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
               </div>
             </div>
           )}
+
+          {/* Dynamic Customer Reviews Section */}
+          <div className="rounded-2xl border bg-card p-8 space-y-6 shadow-sm">
+            <div className="flex items-center justify-between border-b pb-4">
+              <h3 className="font-bold text-xl tracking-tight flex items-center gap-2">
+                <MessageSquare className="h-5 w-5 text-primary" /> Customer Reviews ({gear.totalReviews})
+              </h3>
+            </div>
+
+            {gear.reviews && gear.reviews.length > 0 ? (
+              <div className="space-y-4">
+                {gear.reviews.map((review) => (
+                  <div key={review.id} className="rounded-xl border bg-muted/20 p-5 space-y-3">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <div className="h-8 w-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold text-xs">
+                          {review.user?.name ? review.user.name.substring(0, 2).toUpperCase() : "U"}
+                        </div>
+                        <div>
+                          <p className="font-bold text-sm">{review.user?.name || "Anonymous User"}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {new Date(review.createdAt).toLocaleDateString("en-US", {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center gap-1 bg-amber-500/10 text-amber-600 px-2.5 py-1 rounded-full text-xs font-bold">
+                        <Star className="h-3.5 w-3.5 fill-current" />
+                        <span>{review.rating}</span>
+                      </div>
+                    </div>
+
+                    <p className="text-sm text-muted-foreground leading-relaxed">
+                      &ldquo;{review.comment}&rdquo;
+                    </p>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-8 text-muted-foreground text-sm">
+                No reviews yet for this equipment. Be the first one to rent and review!
+              </div>
+            )}
+          </div>
+
         </div>
 
+        {/* Right Side: Rent Section (4 cols) */}
         <div className="lg:col-span-4">
           <div className="sticky top-24">
             <RentNowSection pricePerDay={gear.pricePerDay} gearId={gear.id} />
