@@ -77,9 +77,7 @@ export const proxy = async (request: NextRequest) => {
 
   //   If the user is not logged in and trying to access a private route, redirect to login
   if (!accessToken && !isPublicRoute && !isAuthRoute) {
-    const loginUrl = new URL("/login", request.url);
-    loginUrl.searchParams.set("redirectTo", pathname);
-    return NextResponse.redirect(loginUrl);
+    return NextResponse.redirect(new URL("/login", request.url));
   }
 
   // 3. Role-Based Access Control (RBAC) with your specific hierarchy rules:
