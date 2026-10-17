@@ -72,7 +72,7 @@ export async function loginUser(prevState: LoginState, formData: FormData) {
     const decodedToken = jwt.decode(result.data.accessToken) as JwtPayload;
 
     if (decodedToken && decodedToken.role) {
-      const role = decodedToken.role.toLowerCase(); // admin, provider, customer
+      const role = decodedToken.role; // admin, provider, customer
 
       if (redirectTo && redirectTo.startsWith("/")) {
         redirect(redirectTo);

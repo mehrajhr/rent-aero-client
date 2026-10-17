@@ -95,11 +95,7 @@ export const proxy = async (request: NextRequest) => {
     }
   } else if (pathname.startsWith("/customer-dashboard")) {
     // Admin, Provider, and Customer all can access customer dashboard/features
-    if (
-      userRole !== "CUSTOMER" &&
-      userRole !== "PROVIDER" &&
-      userRole !== "ADMIN"
-    ) {
+    if (userRole !== "CUSTOMER") {
       return NextResponse.redirect(new URL("/not-found", request.url));
     }
   }
