@@ -33,6 +33,7 @@ type LoginState = {
 export async function loginUser(prevState: LoginState, formData: FormData) {
   const email = formData.get("email");
   const password = formData.get("password");
+  const redirectTo = formData.get("redirectTo") as string;
 
   const payload = {
     email,
@@ -72,6 +73,10 @@ export async function loginUser(prevState: LoginState, formData: FormData) {
 
     if (decodedToken && decodedToken.role) {
       const role = decodedToken.role.toLowerCase(); // admin, provider, customer
+
+      if (redirectTo && redirectTo.startsWith("/")) {
+        redirect(redirectTo);
+      }
 
       if (role === "ADMIN") {
         redirect("/admin-dashboard");

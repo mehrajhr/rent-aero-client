@@ -1,9 +1,12 @@
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import { Badge } from "@/components/ui/badge";
 import { Star, User, Tag, CheckCircle2, XCircle, MessageSquare } from "lucide-react";
 import RentNowSection from "./_components/RentNowSection";
 import { fetchSingleGearItem } from "../../_action/gearActions";
 import { IGearItem } from "../../_types/gear.types";
+import { jwtUtils } from "@/utils/jwt"; // Adjust according to your jwt utility path
+import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
 
 interface DetailsPageProps {
   params: Promise<{ id: string }>;
@@ -12,12 +15,20 @@ interface DetailsPageProps {
 export default async function GearDetailsPage({ params }: DetailsPageProps) {
   const { id } = await params;
   const response = await fetchSingleGearItem(id);
-
-  // Api response theke data object extract kora
   const gear: IGearItem | null = response?.data || response;
 
   if (!gear) {
     notFound();
+  }
+
+  // Check authentication status from cookies in server component
+  const cookieStore = await cookies();
+  const accessToken = cookieStore.get("accessToken")?.value;
+  let isLoggedIn = false;
+
+  if (accessToken) {
+    const decoded = jwtUtils.verifyToken(accessToken, process.env.JWT_ACCESS_SECRET as string);
+    isLoggedIn = Boolean(decoded?.success);
   }
 
   return (
@@ -27,7 +38,6 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
         {/* Left Side: Info, Specs & Reviews (8 cols) */}
         <div className="lg:col-span-8 space-y-8">
           
-          {/* Main Info Card */}
           <div className="rounded-2xl border bg-card p-8 space-y-6 shadow-sm">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <div className="flex items-center gap-2">
@@ -59,7 +69,6 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
               {gear.description}
             </p>
 
-            {/* Provider Info */}
             <div className="rounded-xl border p-4 flex items-center gap-4 bg-muted/30">
               <div className="h-10 w-10 rounded-full bg-primary/10 text-primary flex items-center justify-center font-bold">
                 <User className="h-5 w-5" />
@@ -71,7 +80,6 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
             </div>
           </div>
 
-          {/* Technical Specifications */}
           {gear.specifications && Object.keys(gear.specifications).length > 0 && (
             <div className="rounded-2xl border bg-card p-8 space-y-4 shadow-sm">
               <h3 className="font-bold text-xl tracking-tight">Technical Specifications</h3>
@@ -86,7 +94,7 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
             </div>
           )}
 
-          {/* Dynamic Customer Reviews Section */}
+          {/* Customer Reviews Section */}
           <div className="rounded-2xl border bg-card p-8 space-y-6 shadow-sm">
             <div className="flex items-center justify-between border-b pb-4">
               <h3 className="font-bold text-xl tracking-tight flex items-center gap-2">
@@ -96,7 +104,7 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
 
             {gear.reviews && gear.reviews.length > 0 ? (
               <div className="space-y-4">
-                {gear.reviews.map((review) => (
+                {gear.reviews.map((review: { id: Key | null | undefined; user: { name: string; }; createdAt: string | number | Date; rating: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; comment: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }) => (
                   <div key={review.id} className="rounded-xl border bg-muted/20 p-5 space-y-3">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -139,7 +147,12 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
         {/* Right Side: Rent Section (4 cols) */}
         <div className="lg:col-span-4">
           <div className="sticky top-24">
-            <RentNowSection pricePerDay={gear.pricePerDay} gearId={gear.id} />
+            <RentNowSection 
+              pricePerDay={gear.pricePerDay} 
+              gearId={gear.id} 
+              maxStock={gear.stock} 
+              isLoggedIn={isLoggedIn} 
+            />
           </div>
         </div>
 

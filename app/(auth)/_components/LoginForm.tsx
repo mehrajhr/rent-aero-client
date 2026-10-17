@@ -9,7 +9,7 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import { loginUser } from "../_action/authAction";
 
-const LoginForm = () => {
+const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
   const [state, action, isPending] = useActionState(loginUser, false);
   const router = useRouter();
 
@@ -27,6 +27,8 @@ const LoginForm = () => {
 
   return (
     <form action={action} className="space-y-4">
+      {/* Hidden input to pass redirectTo path to server action */}
+      <input type="hidden" name="redirectTo" value={redirectTo} />
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input

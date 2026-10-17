@@ -1,7 +1,14 @@
 import Link from "next/link";
 import LoginForm from "../_components/LoginForm";
+import { Suspense } from "react";
 
-export default function LoginPage() {
+interface LoginPageProps {
+  searchParams: Promise<{ [key: string]: string | undefined }>;
+}
+
+export default async function LoginPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+  const redirectTo = params.redirectTo || "";
   return (
     <div className="flex min-h-screen items-center justify-center px-4 py-12">
       <div className="w-full max-w-md space-y-6 rounded-xl border bg-card p-6 shadow-lg">
@@ -12,7 +19,9 @@ export default function LoginPage() {
           </p>
         </div>
 
-        <LoginForm />
+        <Suspense fallback={<div>Loading...</div>}>
+          <LoginForm redirectTo={redirectTo}/>
+        </Suspense>
 
         <div className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{" "}
