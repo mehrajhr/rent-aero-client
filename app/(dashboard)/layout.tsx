@@ -13,9 +13,12 @@ import {
   FolderTree,
   ClipboardList,
   Boxes,
+  Menu,
 } from "lucide-react";
 import LogoutButton from "../../components/shared/LogoutButton";
 import RoleSwitcher from "./_components/RoleSwitcher";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
 
 interface NavLink {
   label: string;
@@ -58,12 +61,6 @@ const DASHBOARD_NAV_LINKS: NavLink[] = [
     icon: CreditCard,
     roles: ["CUSTOMER"],
   },
-  // {
-  //   label: "My Reviews",
-  //   href: "/customer-dashboard/reviews",
-  //   icon: Star,
-  //   roles: ["CUSTOMER"],
-  // },
 
   // Provider Features
   {
@@ -153,7 +150,7 @@ export default async function DashboardLayout({
 
   return (
     <div className="flex min-h-screen bg-muted/20">
-      {/* Sidebar */}
+      {/* Sidebar for Desktop */}
       <aside className="hidden lg:flex w-64 flex-col border-r bg-card p-6 space-y-6 sticky top-0 h-screen">
         <div className="flex items-center justify-between px-2">
           <Link href="/" className="font-bold text-xl text-primary">
@@ -192,8 +189,58 @@ export default async function DashboardLayout({
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 border-b bg-card px-6 flex items-center justify-between sticky top-0 z-20">
-          <div className="flex items-center gap-2 lg:hidden">
+        <header className="h-16 border-b bg-card px-4 md:px-6 flex items-center justify-between sticky top-0 z-20">
+          
+          {/* Mobile View: Hamburger Menu & Logo */}
+          <div className="flex items-center gap-3 lg:hidden">
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="outline" size="icon" className="h-9 w-9 rounded-xl">
+                  <Menu className="h-5 w-5" />
+                  <span className="sr-only">Toggle navigation menu</span>
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-72 flex flex-col p-6">
+                <SheetHeader className="text-left space-y-2 pb-4 border-b">
+                  <div className="flex items-center justify-between">
+                    <Link href="/" className="font-bold text-xl text-primary">
+                      Rent<span className="text-foreground">Aero</span>
+                    </Link>
+                    <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-primary/10 text-primary uppercase">
+                      {currentViewRole}
+                    </span>
+                  </div>
+                </SheetHeader>
+
+                <div className="py-4">
+                  <RoleSwitcher
+                    originalRole={originalRole}
+                    currentViewRole={currentViewRole}
+                  />
+                </div>
+
+                <nav className="space-y-1.5 flex-1 overflow-y-auto">
+                  {filteredLinks.map((link) => {
+                    const IconComponent = link.icon;
+                    return (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
+                      >
+                        <IconComponent className="h-4 w-4" />
+                        <span>{link.label}</span>
+                      </Link>
+                    );
+                  })}
+                </nav>
+
+                <div className="pt-4 border-t">
+                  <LogoutButton />
+                </div>
+              </SheetContent>
+            </Sheet>
+
             <Link href="/" className="font-bold text-lg text-primary">
               RentAero
             </Link>
@@ -218,7 +265,7 @@ export default async function DashboardLayout({
           </div>
         </header>
 
-        <div className="p-6 lg:p-10 flex-1">{children}</div>
+        <div className="p-4 sm:p-6 lg:p-10 flex-1">{children}</div>
       </main>
     </div>
   );
