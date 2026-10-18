@@ -14,16 +14,32 @@ export default function RoleSwitcher({ originalRole, currentViewRole }: RoleSwit
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
-  // যদি ইউজার রিয়েললি কাস্টমার হয়, তবে সুইচিং দেখানোর দরকার নেই
   if (originalRole === "CUSTOMER") return null;
 
   const targetRole = currentViewRole === "CUSTOMER" ? originalRole : "CUSTOMER";
   const buttonLabel = currentViewRole === "CUSTOMER" ? `Switch to ${originalRole} Dashboard` : "Switch to Customer View";
 
+  // Target role onujayi explicit dashboard route select kora
+  const getTargetDashboardRoute = (role: "ADMIN" | "PROVIDER" | "CUSTOMER") => {
+    switch (role) {
+      case "ADMIN":
+        return "/admin-dashboard";
+      case "PROVIDER":
+        return "/provider-dashboard";
+      case "CUSTOMER":
+      default:
+        return "/customer-dashboard";
+    }
+  };
+
   const handleSwitch = () => {
     startTransition(async () => {
-      // কুকিতে বর্তমান ভিউ রোল সেট করার জন্য একটি এপিআই কল বা কুকি আপডেট করতে পারেন
+      // 1. Active view role cookie update kora
       document.cookie = `activeViewRole=${targetRole}; path=/; max-age=86400`;
+      
+      // 2. Target dashboard route-e navigate kora
+      const targetRoute = getTargetDashboardRoute(targetRole);
+      router.push(targetRoute);
       router.refresh();
     });
   };

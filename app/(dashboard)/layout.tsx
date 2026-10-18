@@ -25,50 +25,62 @@ interface NavLink {
 }
 
 const DASHBOARD_NAV_LINKS: NavLink[] = [
-  // Common Overview
+  // Role Based Overview Links
   {
     label: "Overview",
-    href: "/dashboard",
+    href: "/customer-dashboard",
     icon: LayoutDashboard,
-    roles: ["ADMIN", "PROVIDER", "CUSTOMER"],
+    roles: ["CUSTOMER"],
+  },
+  {
+    label: "Overview",
+    href: "/provider-dashboard",
+    icon: LayoutDashboard,
+    roles: ["PROVIDER"],
+  },
+  {
+    label: "Overview",
+    href: "/admin-dashboard",
+    icon: LayoutDashboard,
+    roles: ["ADMIN"],
   },
 
-  // Customer Features (Accessible by CUSTOMER or when Admin/Provider switches to Customer View)
+  // Customer Features
   {
     label: "My Rental Orders",
-    href: "/dashboard/customer/rentals",
+    href: "/customer-dashboard/rentals",
     icon: ShoppingBag,
     roles: ["CUSTOMER"],
   },
   {
     label: "Payment History",
-    href: "/dashboard/customer/payments",
+    href: "/customer-dashboard/payments",
     icon: CreditCard,
     roles: ["CUSTOMER"],
   },
-  {
-    label: "My Reviews",
-    href: "/dashboard/customer/reviews",
-    icon: Star,
-    roles: ["CUSTOMER"],
-  },
+  // {
+  //   label: "My Reviews",
+  //   href: "/customer-dashboard/reviews",
+  //   icon: Star,
+  //   roles: ["CUSTOMER"],
+  // },
 
   // Provider Features
   {
     label: "Manage Inventory",
-    href: "/dashboard/provider/gear",
+    href: "/provider-dashboard/gear",
     icon: Boxes,
     roles: ["PROVIDER"],
   },
   {
     label: "Add New Gear",
-    href: "/dashboard/provider/gear/new",
+    href: "/provider-dashboard/gear/new",
     icon: PackagePlus,
     roles: ["PROVIDER"],
   },
   {
     label: "Incoming Orders",
-    href: "/dashboard/provider/orders",
+    href: "/provider-dashboard/orders",
     icon: ClipboardList,
     roles: ["PROVIDER"],
   },
@@ -76,25 +88,25 @@ const DASHBOARD_NAV_LINKS: NavLink[] = [
   // Admin Features
   {
     label: "Manage Users",
-    href: "/dashboard/admin/users",
+    href: "/admin-dashboard/users",
     icon: Users,
     roles: ["ADMIN"],
   },
   {
     label: "All Gear Listings",
-    href: "/dashboard/admin/gear",
+    href: "/admin-dashboard/gear",
     icon: Boxes,
     roles: ["ADMIN"],
   },
   {
     label: "All Rental Orders",
-    href: "/dashboard/admin/orders",
+    href: "/admin-dashboard/orders",
     icon: ClipboardList,
     roles: ["ADMIN"],
   },
   {
     label: "Manage Categories",
-    href: "/dashboard/admin/categories",
+    href: "/admin-dashboard/categories",
     icon: FolderTree,
     roles: ["ADMIN"],
   },
@@ -102,7 +114,7 @@ const DASHBOARD_NAV_LINKS: NavLink[] = [
   // Common Profile Management
   {
     label: "Manage Profile",
-    href: "/dashboard/profile",
+    href: "/customer-dashboard/profile",
     icon: User,
     roles: ["ADMIN", "PROVIDER", "CUSTOMER"],
   },
@@ -122,7 +134,6 @@ export default async function DashboardLayout({
     | "CUSTOMER";
   const userName = userData?.name || "User";
 
-  // Check if Admin/Provider has switched to Customer view via cookies
   const cookieStore = await cookies();
   const activeViewRoleCookie = cookieStore.get("activeViewRole")?.value as
     | "ADMIN"
@@ -130,14 +141,12 @@ export default async function DashboardLayout({
     | "CUSTOMER"
     | undefined;
 
-  // নির্ধারণ করা হচ্ছে বর্তমান ইউজার কোন মোডে ড্যাশবোর্ড দেখবে
   const currentViewRole =
     activeViewRoleCookie &&
     (originalRole === "ADMIN" || originalRole === "PROVIDER")
       ? activeViewRoleCookie
       : originalRole;
 
-  // ফিল্টার লিংকস: বর্তমান ভিউ রোল অনুযায়ী নেভিগেশন শো করবে
   const filteredLinks = DASHBOARD_NAV_LINKS.filter((link) =>
     link.roles.includes(currentViewRole),
   );
@@ -155,13 +164,11 @@ export default async function DashboardLayout({
           </span>
         </div>
 
-        {/* Role Switcher Option for Admin / Provider */}
         <RoleSwitcher
           originalRole={originalRole}
           currentViewRole={currentViewRole}
         />
 
-        {/* Dynamic Navigation Links */}
         <nav className="space-y-1.5 flex-1 overflow-y-auto">
           {filteredLinks.map((link) => {
             const IconComponent = link.icon;
@@ -178,7 +185,6 @@ export default async function DashboardLayout({
           })}
         </nav>
 
-        {/* Logout Action Component */}
         <div className="pt-4 border-t">
           <LogoutButton />
         </div>
@@ -186,7 +192,6 @@ export default async function DashboardLayout({
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col min-w-0">
-        {/* Dashboard Top Header */}
         <header className="h-16 border-b bg-card px-6 flex items-center justify-between sticky top-0 z-20">
           <div className="flex items-center gap-2 lg:hidden">
             <Link href="/" className="font-bold text-lg text-primary">
@@ -213,7 +218,6 @@ export default async function DashboardLayout({
           </div>
         </header>
 
-        {/* Page Content */}
         <div className="p-6 lg:p-10 flex-1">{children}</div>
       </main>
     </div>
