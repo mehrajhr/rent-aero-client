@@ -37,7 +37,7 @@ export default async function CustomerOverviewPage() {
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-2xl bg-gradient-to-r from-primary/10 via-primary/5 to-transparent p-6 md:p-8 border">
         <div className="space-y-1">
           <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight">
-            Welcome back, {userName}! 👋
+            Welcome back, {userName}
           </h1>
           <p className="text-sm text-muted-foreground">
             Here's an overview of your active gear rentals, payment activity, and order statuses.

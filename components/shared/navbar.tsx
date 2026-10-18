@@ -168,10 +168,10 @@ export default function Navbar({ user }: NavbarProps) {
                 <DropdownMenuItem asChild>
                   <Link
                     className="flex items-center cursor-pointer"
-                    href="/profile"
+                    href="/my-profile"
                   >
                     <UserIcon className="mr-2 h-4 w-4" />
-                    <span>Profile Settings</span>
+                    <span>Profile</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />

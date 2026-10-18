@@ -9,7 +9,7 @@ export async function fetchCategories(): Promise<ICategory[]> {
       cache: "no-store",
     });
 
-    console.log("Response from fetchCategories:", res);
+    // console.log("Response from fetchCategories:", res);
 
     if (!res.ok) {
       throw new Error("Failed to fetch categories");
