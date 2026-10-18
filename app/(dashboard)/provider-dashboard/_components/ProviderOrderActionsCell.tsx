@@ -49,7 +49,11 @@ export default function ProviderOrderActionsCell({
         <Select
           defaultValue={currentStatus}
           onValueChange={handleStatusChange}
-          disabled={isPending || currentStatus === "CANCELLED" || currentStatus === "RETURNED"}
+          disabled={
+            isPending ||
+            currentStatus === "CANCELLED" ||
+            currentStatus === "RETURNED"
+          }
         >
           <SelectTrigger className="w-37.5 text-xs h-9 rounded-xl">
             <SelectValue placeholder="Update Status" />
@@ -57,6 +61,7 @@ export default function ProviderOrderActionsCell({
           <SelectContent>
             <SelectItem value="PLACED">PLACED</SelectItem>
             <SelectItem value="CONFIRMED">CONFIRMED</SelectItem>
+            <SelectItem value="PAID">PAID</SelectItem>
             <SelectItem value="PICKED_UP">PICKED UP</SelectItem>
             <SelectItem value="RETURNED">RETURNED</SelectItem>
             <SelectItem value="CANCELLED">CANCELLED</SelectItem>
