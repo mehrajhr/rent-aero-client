@@ -113,8 +113,8 @@ const DASHBOARD_NAV_LINKS: NavLink[] = [
 
   // Common Profile Management
   {
-    label: "Manage Profile",
-    href: "/customer-dashboard/profile",
+    label: "My Profile",
+    href: "/my-profile",
     icon: User,
     roles: ["ADMIN", "PROVIDER", "CUSTOMER"],
   },
