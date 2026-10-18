@@ -12,7 +12,10 @@ interface RentalActionsCellProps {
   status: string;
 }
 
-export default function RentalActionsCell({ orderId, status }: RentalActionsCellProps) {
+export default function RentalActionsCell({
+  orderId,
+  status,
+}: RentalActionsCellProps) {
   const [isPending, startTransition] = useTransition();
 
   const handleCancel = () => {
@@ -30,7 +33,9 @@ export default function RentalActionsCell({ orderId, status }: RentalActionsCell
     <div className="flex items-center gap-2 flex-wrap justify-end">
       {/* View Details Button */}
       <Button asChild size="sm" variant="outline">
-        <Link href={`/customer-dashboard/rentals/${orderId}`}>View Details</Link>
+        <Link href={`/customer-dashboard/rentals/${orderId}`}>
+          View Details
+        </Link>
       </Button>
 
       {/* Cancel Order: Only when status is PLACED (before provider confirmation) */}
@@ -42,20 +47,31 @@ export default function RentalActionsCell({ orderId, status }: RentalActionsCell
           onClick={handleCancel}
           className="gap-1"
         >
-          {isPending ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <XCircle className="h-3.5 w-3.5" />}
+          {isPending ? (
+            <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          ) : (
+            <XCircle className="h-3.5 w-3.5" />
+          )}
           Cancel Order
         </Button>
       )}
 
       {/* Payment Option: Show ONLY when provider confirms (e.g. status === "CONFIRMED") */}
       {status === "CONFIRMED" && (
-        <Button size="sm" className="gap-1.5 bg-green-600 hover:bg-green-700 text-white">
-          <CreditCard className="h-3.5 w-3.5" /> Pay Now (Stripe / SSL)
+        <Button
+          size="sm"
+          className="gap-1.5 bg-green-600 hover:bg-green-700 text-white"
+        >
+          <Link href={`/customer-dashboard/rentals/${orderId}/payment`} className="flex items-center gap-1.5">
+            <CreditCard className="h-3.5 w-3.5" /> Pay Now
+          </Link>
         </Button>
       )}
 
       {status === "CANCELLED" && (
-        <span className="text-xs font-semibold text-destructive italic">Order Cancelled</span>
+        <span className="text-xs font-semibold text-destructive italic">
+          Order Cancelled
+        </span>
       )}
     </div>
   );
