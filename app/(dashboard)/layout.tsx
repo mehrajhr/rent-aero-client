@@ -6,7 +6,6 @@ import {
   LayoutDashboard,
   ShoppingBag,
   CreditCard,
-  Star,
   User,
   PackagePlus,
   Users,
@@ -17,7 +16,7 @@ import {
 } from "lucide-react";
 import LogoutButton from "../../components/shared/LogoutButton";
 import RoleSwitcher from "./_components/RoleSwitcher";
-import { Sheet, SheetContent, SheetTrigger, SheetHeader, SheetTitle } from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetTrigger, SheetHeader } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 
 interface NavLink {
@@ -138,11 +137,19 @@ export default async function DashboardLayout({
     | "CUSTOMER"
     | undefined;
 
-  const currentViewRole =
-    activeViewRoleCookie &&
-    (originalRole === "ADMIN" || originalRole === "PROVIDER")
-      ? activeViewRoleCookie
-      : originalRole;
+  // 🛠️ FIX LOGIC: Ensure activeViewRole is strictly valid for the logged in user
+  let currentViewRole: "ADMIN" | "PROVIDER" | "CUSTOMER" = originalRole;
+
+  if (activeViewRoleCookie) {
+    // ADMIN can switch to PROVIDER or CUSTOMER
+    if (originalRole === "ADMIN" && ["ADMIN", "PROVIDER", "CUSTOMER"].includes(activeViewRoleCookie)) {
+      currentViewRole = activeViewRoleCookie;
+    }
+    // PROVIDER can switch to CUSTOMER
+    else if (originalRole === "PROVIDER" && ["PROVIDER", "CUSTOMER"].includes(activeViewRoleCookie)) {
+      currentViewRole = activeViewRoleCookie;
+    }
+  }
 
   const filteredLinks = DASHBOARD_NAV_LINKS.filter((link) =>
     link.roles.includes(currentViewRole),
@@ -191,7 +198,7 @@ export default async function DashboardLayout({
       <main className="flex-1 flex flex-col min-w-0">
         <header className="h-16 border-b bg-card px-4 md:px-6 flex items-center justify-between sticky top-0 z-20">
           
-          {/* Mobile View: Hamburger Menu & Logo */}
+          {/* Mobile View */}
           <div className="flex items-center gap-3 lg:hidden">
             <Sheet>
               <SheetTrigger asChild>

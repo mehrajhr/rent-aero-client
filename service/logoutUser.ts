@@ -9,6 +9,7 @@ export const logoutUser = async () => {
 
   cookieStore.delete("accessToken");
   cookieStore.delete("refreshToken");
+  cookieStore.delete("activeViewRole");
 
   revalidateTag("my-profile", "max");
 
