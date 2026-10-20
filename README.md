@@ -1,5 +1,5 @@
 <div align="center">
-  <h1 align="center">🚀 RentAero — Web Client</h1>
+  <h1 align="center">RentAero — Frontend</h1>
   <p align="center"><b>Modern Equipment Rental Management & Marketplace Dashboard</b></p>
  
 </div>
