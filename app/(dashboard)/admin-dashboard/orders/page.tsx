@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchAllRentalOrders } from "../_action/rentalAction";
 import OrdersTableClient from "../_components/OrdersTableClient";
 

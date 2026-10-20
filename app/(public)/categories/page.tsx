@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchCategories } from "../_action/categoryActions";
 import { ICategory } from "../_types/category.types";
 import CategoryCard from "./_components/CategoryCard";

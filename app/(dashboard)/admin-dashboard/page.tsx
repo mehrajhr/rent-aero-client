@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchAdminOverviewStats } from "./_action/adminStatsActions";
 import { Users, Boxes, ClipboardList, DollarSign, TrendingUp, ArrowRight, Shield } from "lucide-react";
 import { Badge } from "@/components/ui/badge";

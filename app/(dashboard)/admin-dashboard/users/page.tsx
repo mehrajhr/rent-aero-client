@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchAllUsers } from "../_action/usersAction";
 import UsersTableClient from "../_components/UsersTableClient";
 

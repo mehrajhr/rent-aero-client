@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchCategories } from "../_action/categoryActions";
 import CategoriesTableClient from "../_components/CategoriesTableClient";
 import CategoryModal from "../_components/CategoryModal";

@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchMyRentals } from "./_action/rentalActions";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Package, User, Store } from "lucide-react";

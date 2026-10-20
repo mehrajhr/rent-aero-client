@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchProviderOrders } from "../_action/providerOrderActions";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Package, User } from "lucide-react";

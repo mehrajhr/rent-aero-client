@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { fetchProviderOverviewData } from "./_action/overviewActions";
 import { getMe } from "@/service/getMe";
 import { Badge } from "@/components/ui/badge";
