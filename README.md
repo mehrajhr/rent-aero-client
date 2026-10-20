@@ -37,6 +37,7 @@
 
 ### 🛒 Customer Portal & Public Marketplace
 * **Catalog Browsing:** Filter equipment listings by search terms and category tags.
+* **Payment:** Secure payment gateway with stripe.
 * **Rental Bookings:** Seamless booking flow with rental history and payment tracking.
 
 ---
