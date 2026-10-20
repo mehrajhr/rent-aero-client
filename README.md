@@ -72,7 +72,7 @@ npm run dev
 
 ## 🔗 Related links
 
-* **Backend Repository:** [\[RentAero Backend Repository\]](https://rent-aero.vercel.app/)
+* **Backend Repository:** [\[RentAero Backend Repository\]][(https://rent-aero.vercel.app/](https://github.com/mehrajhr/Rent-Aero)
 * **Backend API:** [\[RentAero Backend API\]](https://rent-aero.vercel.app/)
  
 ---
