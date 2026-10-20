@@ -1,13 +1,7 @@
 <div align="center">
   <h1 align="center">🚀 RentAero — Web Client</h1>
   <p align="center"><b>Modern Equipment Rental Management & Marketplace Dashboard</b></p>
-  <p align="center">
-    <a href="#-tech-stack">Tech Stack</a> •
-    <a href="#-key-features">Key Features</a> •
-    <a href="#-getting-started">Getting Started</a> •
-    <a href="#-deployment">Deployment</a> •
-    <a href="#-related-repositories">Backend API</a>
-  </p>
+ 
 </div>
 
 ---
