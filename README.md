@@ -8,7 +8,7 @@
 
 ## 📖 Overview
 
-**RentAero Client** is the frontend application for the RentAero equipment rental platform. Built with **Next.js 15 (App Router)** and **Tailwind CSS / Shadcn UI**, it provides an intuitive interface for Admins, Equipment Providers, and Customers.
+**RentAero Client** is the frontend application for the RentAero equipment rental platform. Built with **Next.js 15 (App Router)** , **TypeScript** and **Tailwind CSS / Shadcn UI**, it provides an intuitive interface for Admins, Equipment Providers, and Customers.
 
 ---
 
