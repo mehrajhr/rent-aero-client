@@ -55,14 +55,18 @@ Follow these steps to run the client application locally:
 git clone [https://github.com/mehrajhr/rent-aero-client.git](https://github.com/mehrajhr/rent-aero-client.git)
 cd rent-aero-client
 npm install
-
-Create a .env file in the root directory:
+```
+### **2. Create a .env file in the root directory:
+```bash
 NEXT_PUBLIC_BACKEND_URL=https://rent-aero.vercel.app/api/
 JWT_ACCESS_SECRET=YOUR JWT ACCESS SECRET
 JWT_REFRESH_SECRET=YOUR_JWT_REFRESH_SECRET
+```
 
-Run Development Server
+### **3. Run Development Server
+```bash
 npm run dev
+```
 
 ---
 
@@ -70,5 +74,5 @@ npm run dev
 
 * **Backend Repository:** [\[RentAero Backend Repository\]](https://rent-aero.vercel.app/)
 * **Backend API:** [\[RentAero Backend API\]](https://rent-aero.vercel.app/)
-
+ 
 ---
