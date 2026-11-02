@@ -29,7 +29,7 @@ const RegisterForm = () => {
     <form action={action} className="space-y-4">
       <div className="space-y-2">
         <Label htmlFor="name">Full Name</Label>
-        <Input id="name" name="name" placeholder="Mehraj Hasan" required />
+        <Input id="name" name="name" placeholder="Your Name" required />
       </div>
 
       <div className="space-y-2">
@@ -38,7 +38,7 @@ const RegisterForm = () => {
           id="email"
           name="email"
           type="email"
-          placeholder="mehraj@example.com"
+          placeholder="email@gmail.com"
           required
         />
       </div>
