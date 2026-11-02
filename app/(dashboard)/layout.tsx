@@ -19,6 +19,7 @@ import RoleSwitcher from "./_components/RoleSwitcher";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import DashboardNavLink from "./_components/DashboardNavLink";
+import ThemeSwitcher from "@/components/shared/ThemeSwitcher";
 import {
   DashboardNavigationFeedbackProvider,
   DashboardPageContent,
@@ -255,6 +256,7 @@ export default async function DashboardLayout({
           </div>
 
           <div className="ml-auto flex items-center gap-3">
+            <ThemeSwitcher />
             <div className="text-right hidden sm:block">
               <p className="text-xs font-bold leading-none">{userName}</p>
               <p className="text-[10px] text-muted-foreground capitalize">

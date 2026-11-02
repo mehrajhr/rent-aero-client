@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import LogoutButton from "./LogoutButton";
 import PublicNavLink from "./PublicNavLink";
+import ThemeSwitcher from "./ThemeSwitcher";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -130,6 +131,7 @@ export default function Navbar({ user }: NavbarProps) {
 
         {/* Right Side: Profile or Auth buttons */}
         <div className="flex items-center justify-end gap-4">
+          <ThemeSwitcher />
           {isAuthenticated && user ? (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
