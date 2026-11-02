@@ -18,6 +18,11 @@ import LogoutButton from "../../components/shared/LogoutButton";
 import RoleSwitcher from "./_components/RoleSwitcher";
 import { Sheet, SheetContent, SheetTrigger, SheetHeader } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import DashboardNavLink from "./_components/DashboardNavLink";
+import {
+  DashboardNavigationFeedbackProvider,
+  DashboardPageContent,
+} from "./_components/DashboardNavigationFeedback";
 
 interface NavLink {
   label: string;
@@ -156,6 +161,7 @@ export default async function DashboardLayout({
   );
 
   return (
+    <DashboardNavigationFeedbackProvider>
     <div className="flex min-h-screen bg-muted/20">
       {/* Sidebar for Desktop */}
       <aside className="hidden lg:flex w-64 flex-col border-r bg-card p-6 space-y-6 sticky top-0 h-screen">
@@ -177,14 +183,10 @@ export default async function DashboardLayout({
           {filteredLinks.map((link) => {
             const IconComponent = link.icon;
             return (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-              >
+              <DashboardNavLink key={link.href} href={link.href}>
                 <IconComponent className="h-4 w-4" />
                 <span>{link.label}</span>
-              </Link>
+              </DashboardNavLink>
             );
           })}
         </nav>
@@ -230,14 +232,10 @@ export default async function DashboardLayout({
                   {filteredLinks.map((link) => {
                     const IconComponent = link.icon;
                     return (
-                      <Link
-                        key={link.href}
-                        href={link.href}
-                        className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-muted-foreground hover:text-primary hover:bg-primary/10 transition-colors"
-                      >
+                      <DashboardNavLink key={link.href} href={link.href}>
                         <IconComponent className="h-4 w-4" />
                         <span>{link.label}</span>
-                      </Link>
+                      </DashboardNavLink>
                     );
                   })}
                 </nav>
@@ -272,8 +270,11 @@ export default async function DashboardLayout({
           </div>
         </header>
 
-        <div className="p-4 sm:p-6 lg:p-10 flex-1">{children}</div>
+        <div className="p-4 sm:p-6 lg:p-10 flex-1">
+          <DashboardPageContent>{children}</DashboardPageContent>
+        </div>
       </main>
     </div>
+    </DashboardNavigationFeedbackProvider>
   );
 }

@@ -12,11 +12,13 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, RotateCcw, Loader2 } from "lucide-react";
+import { useDashboardNavigation } from "../../_components/DashboardNavigationFeedback";
 
 export default function GearFilters({ categories }: { categories: any[] }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [isPending, startTransition] = useTransition();
+  const { beginNavigation } = useDashboardNavigation();
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("searchTerm") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "ALL");
@@ -35,7 +37,11 @@ export default function GearFilters({ categories }: { categories: any[] }) {
       if (sortOrder) params.set("sortOrder", sortOrder);
       params.set("page", "1");
 
-      router.push(`/admin-dashboard/gear?${params.toString()}`);
+      const nextSearch = params.toString();
+      if (nextSearch !== searchParams.toString()) {
+        beginNavigation();
+      }
+      router.push(`/admin-dashboard/gear?${nextSearch}`);
     });
   };
 
@@ -45,6 +51,9 @@ export default function GearFilters({ categories }: { categories: any[] }) {
     setIsAvailable("ALL");
     setSortBy("createdAt");
     setSortOrder("desc");
+    if (searchParams.size > 0) {
+      beginNavigation();
+    }
     router.push("/admin-dashboard/gear");
   };
 

@@ -4,6 +4,7 @@ import { useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowLeftRight, Loader2 } from "lucide-react";
+import { useDashboardNavigation } from "./DashboardNavigationFeedback";
 
 interface RoleSwitcherProps {
   originalRole: "ADMIN" | "PROVIDER" | "CUSTOMER";
@@ -13,6 +14,7 @@ interface RoleSwitcherProps {
 export default function RoleSwitcher({ originalRole, currentViewRole }: RoleSwitcherProps) {
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { beginNavigation } = useDashboardNavigation();
 
   if (originalRole === "CUSTOMER") return null;
 
@@ -39,6 +41,7 @@ export default function RoleSwitcher({ originalRole, currentViewRole }: RoleSwit
       
       // 2. Target dashboard route-e navigate kora
       const targetRoute = getTargetDashboardRoute(targetRole);
+      beginNavigation();
       router.push(targetRoute);
       router.refresh();
     });

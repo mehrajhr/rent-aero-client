@@ -22,6 +22,7 @@ import {
   Menu,
 } from "lucide-react";
 import LogoutButton from "./LogoutButton";
+import PublicNavLink from "./PublicNavLink";
 
 const NAV_LINKS = [
   { label: "Home", href: "/" },
@@ -88,12 +89,12 @@ export default function Navbar({ user }: NavbarProps) {
                 <div className="flex flex-col gap-3">
                   {NAV_LINKS.map((link) => (
                     <SheetClose asChild key={link.href}>
-                      <Link
+                      <PublicNavLink
                         href={link.href}
                         className="text-muted-foreground hover:text-primary transition-colors font-medium py-2 px-3 rounded-md hover:bg-muted"
                       >
                         {link.label}
-                      </Link>
+                      </PublicNavLink>
                     </SheetClose>
                   ))}
                 </div>
@@ -117,13 +118,13 @@ export default function Navbar({ user }: NavbarProps) {
         {/* Center: Desktop Links */}
         <nav className="hidden md:flex items-center justify-center gap-8 text-sm font-medium text-muted-foreground flex-1">
           {NAV_LINKS.map((link) => (
-            <Link
-              className="transition-colors hover:text-primary"
+            <PublicNavLink
+              className="rounded-md px-3 py-2 transition-colors hover:text-primary"
               href={link.href}
               key={link.href}
             >
               {link.label}
-            </Link>
+            </PublicNavLink>
           ))}
         </nav>
 

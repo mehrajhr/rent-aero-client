@@ -15,6 +15,7 @@ import {
 import { Loader2, Plus, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { createGear, updateGear } from "../_action/gearActions";
+import { useDashboardNavigation } from "../../_components/DashboardNavigationFeedback";
 
 interface SpecificationPair {
   key: string;
@@ -31,6 +32,7 @@ interface GearFormProps {
 export default function GearForm({ categories, initialData, mode, gearId }: GearFormProps) {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
+  const { beginNavigation } = useDashboardNavigation();
 
   const initialSpecsArray: SpecificationPair[] = initialData?.specifications
     ? Object.entries(initialData.specifications).map(([key, value]) => ({
@@ -98,6 +100,7 @@ export default function GearForm({ categories, initialData, mode, gearId }: Gear
 
       if (res.success) {
         toast.success(res.message);
+        beginNavigation();
         router.push("/provider-dashboard/gear");
         router.refresh();
       } else {
