@@ -42,7 +42,41 @@ export async function fetchRentalDetails(id: string) {
     });
 
     const result = await res.json();
-    return result.success ? result.data : null;
+    if (!result.success || !result.data) return null;
+
+    const rental = result.data;
+    if (rental.status === "RETURNED" && rental.items?.length) {
+      const gearIds = [...new Set(rental.items.map((item: any) => item.gearId))];
+      const reviewsByGearId = Object.fromEntries(
+        await Promise.all(
+          gearIds.map(async (gearId: string) => {
+            try {
+              const gearRes = await fetch(`${backendUrl}/gear/${gearId}`, {
+                cache: "no-store",
+              });
+              if (!gearRes.ok) return [gearId, null];
+
+              const gearResult = await gearRes.json();
+              const review = gearResult.success
+                ? gearResult.data?.reviews?.find(
+                    (entry: any) => entry.orderId === id,
+                  ) ?? null
+                : null;
+              return [gearId, review];
+            } catch {
+              return [gearId, null];
+            }
+          }),
+        ),
+      );
+
+      rental.items = rental.items.map((item: any) => ({
+        ...item,
+        review: reviewsByGearId[item.gearId] ?? null,
+      }));
+    }
+
+    return rental;
   } catch (error) {
     console.error("Error fetching rental details:", error);
     return null;

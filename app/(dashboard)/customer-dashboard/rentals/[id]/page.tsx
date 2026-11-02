@@ -2,8 +2,9 @@ import { notFound } from "next/navigation";
 import { fetchRentalDetails } from "../_action/rentalActions";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { Calendar, Store, User, ArrowLeft, Tag, ShieldCheck } from "lucide-react";
+import { Calendar, Store, ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import GearReview from "../_components/GearReview";
 
 interface DetailsPageProps {
   params: Promise<{ id: string }>;
@@ -88,25 +89,42 @@ export default async function RentalDetailsPage({ params }: DetailsPageProps) {
       </div>
 
       {/* Ordered Gear Items */}
-      <div className="rounded-2xl border bg-card p-6 md:p-8 shadow-sm space-y-6">
+      <div
+        id="reviews"
+        className="rounded-2xl border bg-card p-6 shadow-sm space-y-6 md:p-8"
+      >
         <h3 className="font-bold text-xl tracking-tight">Rented Equipment Items</h3>
 
         <div className="space-y-4">
           {rental.items?.map((item: any) => (
-            <div key={item.id} className="rounded-xl border p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-muted/10">
-              <div className="space-y-1">
-                <div className="flex items-center gap-2">
-                  <Badge variant="outline" className="text-[10px] uppercase font-bold">{item.gear?.brand}</Badge>
-                  <span className="text-xs text-muted-foreground">Qty: {item.quantity}</span>
+            <div
+              key={item.id}
+              className="space-y-4 rounded-xl border bg-muted/10 p-5"
+            >
+              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+                <div className="space-y-1">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="outline" className="text-[10px] uppercase font-bold">{item.gear?.brand}</Badge>
+                    <span className="text-xs text-muted-foreground">Qty: {item.quantity}</span>
+                  </div>
+                  <h4 className="font-bold text-lg">{item.gear?.name}</h4>
+                  <p className="text-xs text-muted-foreground line-clamp-1">{item.gear?.description}</p>
                 </div>
-                <h4 className="font-bold text-lg">{item.gear?.name}</h4>
-                <p className="text-xs text-muted-foreground line-clamp-1">{item.gear?.description}</p>
+
+                <div className="text-left sm:text-right">
+                  <p className="text-xs text-muted-foreground">Price at Rental</p>
+                  <p className="font-bold text-lg text-primary">${item.priceAtRental} / day</p>
+                </div>
               </div>
 
-              <div className="text-right">
-                <p className="text-xs text-muted-foreground">Price at Rental</p>
-                <p className="font-bold text-lg text-primary">${item.priceAtRental} / day</p>
-              </div>
+              {rental.status === "RETURNED" && (
+                <GearReview
+                  orderId={rental.id}
+                  gearId={item.gearId}
+                  gearName={item.gear?.name || "this gear"}
+                  review={item.review ?? null}
+                />
+              )}
             </div>
           ))}
         </div>

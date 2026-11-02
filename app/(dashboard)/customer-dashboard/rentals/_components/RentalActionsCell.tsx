@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { Button } from "@/components/ui/button";
 import { updateOrderStatus } from "../_action/rentalActions";
 import { toast } from "sonner";
-import { CreditCard, XCircle, Loader2 } from "lucide-react";
+import { CreditCard, XCircle, Loader2, Star } from "lucide-react";
 import Link from "next/link";
 
 interface RentalActionsCellProps {
@@ -37,6 +37,14 @@ export default function RentalActionsCell({
           View Details
         </Link>
       </Button>
+
+      {status === "RETURNED" && (
+        <Button asChild size="sm" className="gap-1.5">
+          <Link href={`/customer-dashboard/rentals/${orderId}#reviews`}>
+            <Star className="h-3.5 w-3.5" /> Review gear
+          </Link>
+        </Button>
+      )}
 
       {/* Cancel Order: Only when status is PLACED (before provider confirmation) */}
       {status === "PLACED" && (
