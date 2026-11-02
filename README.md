@@ -14,7 +14,7 @@
 
 ## 🛠️ Tech Stack
 
-* **Framework:** [Next.js 15](https://nextjs.org/) (App Router, Server Actions)
+* **Framework:** [Next.js 16.3.7](https://nextjs.org/) (App Router, Server Actions)
 * **Language:** TypeScript
 * **Styling:** [Tailwind CSS](https://tailwindcss.com/)
 * **UI Components:** [Shadcn UI](https://ui.shadcn.com/)
