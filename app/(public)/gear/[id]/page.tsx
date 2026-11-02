@@ -10,10 +10,12 @@ import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from
 
 interface DetailsPageProps {
   params: Promise<{ id: string }>;
+  searchParams: Promise<{ startDate?: string; endDate?: string }>;
 }
 
-export default async function GearDetailsPage({ params }: DetailsPageProps) {
+export default async function GearDetailsPage({ params, searchParams }: DetailsPageProps) {
   const { id } = await params;
+  const dates = await searchParams;
   const response = await fetchSingleGearItem(id);
   const gear: IGearItem | null = response?.data || response;
 
@@ -152,6 +154,8 @@ export default async function GearDetailsPage({ params }: DetailsPageProps) {
               gearId={gear.id} 
               maxStock={gear.stock} 
               isLoggedIn={isLoggedIn} 
+              initialStartDate={dates.startDate}
+              initialEndDate={dates.endDate}
             />
           </div>
         </div>

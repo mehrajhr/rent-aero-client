@@ -1,13 +1,14 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { CalendarIcon, ShieldCheck, Plus, Minus, Loader2 } from "lucide-react";
-import { format, differenceInDays } from "date-fns";
+import { format, differenceInDays, parseISO, startOfToday } from "date-fns";
 import { createRentalOrder } from "../../../_action/rentalAction"; 
+import { fetchGearAvailability } from "../../../_action/gearActions";
 import { toast } from "sonner"; 
 
 interface RentNowProps {
@@ -15,20 +16,38 @@ interface RentNowProps {
   gearId: string;
   maxStock: number;
   isLoggedIn: boolean;
+  initialStartDate?: string;
+  initialEndDate?: string;
 }
 
-export default function RentNowSection({ pricePerDay, gearId, maxStock, isLoggedIn }: RentNowProps) {
+export default function RentNowSection({ pricePerDay, gearId, maxStock, isLoggedIn, initialStartDate, initialEndDate }: RentNowProps) {
   const router = useRouter();
-  const [startDate, setStartDate] = useState<Date | undefined>(undefined);
-  const [endDate, setEndDate] = useState<Date | undefined>(undefined);
+  const parseDate = (value?: string) => value ? parseISO(`${value.slice(0, 10)}T12:00:00`) : undefined;
+  const [startDate, setStartDate] = useState<Date | undefined>(() => parseDate(initialStartDate));
+  const [endDate, setEndDate] = useState<Date | undefined>(() => parseDate(initialEndDate));
   const [quantity, setQuantity] = useState<number>(1);
+  const [availableStock, setAvailableStock] = useState<number | null>(null);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
   const [isPending, startTransition] = useTransition();
 
+  const hasValidDates = Boolean(startDate && endDate && endDate > startDate && startDate >= startOfToday());
+  useEffect(() => {
+    if (!hasValidDates || !startDate || !endDate) { setAvailableStock(null); return; }
+    let active = true;
+    setCheckingAvailability(true);
+    setAvailableStock(null);
+    fetchGearAvailability(gearId, format(startDate, "yyyy-MM-dd"), format(endDate, "yyyy-MM-dd"))
+      .then((availability) => { if (active) setAvailableStock(availability?.availableStock ?? 0); })
+      .finally(() => { if (active) setCheckingAvailability(false); });
+    return () => { active = false; };
+  }, [gearId, startDate, endDate, hasValidDates]);
+
+  const effectiveStock = hasValidDates ? availableStock ?? 0 : maxStock;
   const rentalDays = startDate && endDate ? Math.max(1, differenceInDays(endDate, startDate)) : 0;
   const totalPrice = rentalDays * pricePerDay * quantity;
 
   const handleQuantityChange = (type: "inc" | "dec") => {
-    if (type === "inc" && quantity < maxStock) {
+    if (type === "inc" && quantity < effectiveStock) {
       setQuantity((prev) => prev + 1);
     } else if (type === "dec" && quantity > 1) {
       setQuantity((prev) => prev - 1);
@@ -40,8 +59,8 @@ export default function RentNowSection({ pricePerDay, gearId, maxStock, isLogged
 
     startTransition(async () => {
       const payload = {
-        startDate: startDate.toISOString(),
-        endDate: endDate.toISOString(),
+        startDate: format(startDate, "yyyy-MM-dd'T'00:00:00.000'Z'"),
+        endDate: format(endDate, "yyyy-MM-dd'T'00:00:00.000'Z'"),
         items: [
           {
             gearId,
@@ -87,7 +106,8 @@ export default function RentNowSection({ pricePerDay, gearId, maxStock, isLogged
 
       {/* Quantity Selector */}
       <div className="space-y-2">
-        <label className="text-xs font-semibold">Quantity (Stock: {maxStock})</label>
+        <label className="text-xs font-semibold">Quantity (Available: {effectiveStock})</label>
+        {hasValidDates && <p aria-live="polite" className="text-xs text-muted-foreground">{checkingAvailability ? "Checking dates…" : `${effectiveStock} unit(s) available for selected dates`}</p>}
         <div className="flex items-center justify-between rounded-lg border px-3 py-2 bg-muted/20">
           <span className="text-xs font-medium">Select Units</span>
           <div className="flex items-center gap-3">
@@ -106,7 +126,7 @@ export default function RentNowSection({ pricePerDay, gearId, maxStock, isLogged
               size="icon"
               className="h-7 w-7"
               onClick={() => handleQuantityChange("inc")}
-              disabled={quantity >= maxStock}
+              disabled={quantity >= effectiveStock || checkingAvailability}
             >
               <Plus className="h-3 w-3" />
             </Button>
@@ -126,7 +146,7 @@ export default function RentNowSection({ pricePerDay, gearId, maxStock, isLogged
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar mode="single" selected={startDate} onSelect={setStartDate} />
+              <Calendar mode="single" selected={startDate} disabled={{ before: startOfToday() }} onSelect={(date) => { setStartDate(date); if (date && endDate && endDate <= date) setEndDate(undefined); }} />
             </PopoverContent>
           </Popover>
 
@@ -138,7 +158,7 @@ export default function RentNowSection({ pricePerDay, gearId, maxStock, isLogged
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0">
-              <Calendar mode="single" selected={endDate} onSelect={setEndDate} />
+              <Calendar mode="single" selected={endDate} disabled={{ before: startDate ?? startOfToday() }} onSelect={setEndDate} />
             </PopoverContent>
           </Popover>
         </div>
@@ -160,7 +180,7 @@ export default function RentNowSection({ pricePerDay, gearId, maxStock, isLogged
       <Button 
         className="w-full" 
         size="lg" 
-        disabled={!startDate || !endDate || isPending}
+        disabled={!hasValidDates || isPending || checkingAvailability || (hasValidDates && (!availableStock || quantity > (availableStock ?? 0)))}
         onClick={handleRentNow}
       >
         {isPending ? (

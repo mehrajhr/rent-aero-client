@@ -11,6 +11,8 @@ export async function fetchGearItems(filters: IGearFilterRequest) {
     if (filters.minPrice !== undefined) queryParams.append("minPrice", filters.minPrice.toString());
     if (filters.maxPrice !== undefined) queryParams.append("maxPrice", filters.maxPrice.toString());
     if (filters.isAvailable !== undefined) queryParams.append("isAvailable", filters.isAvailable.toString());
+    if (filters.startDate) queryParams.append("startDate", filters.startDate);
+    if (filters.endDate) queryParams.append("endDate", filters.endDate);
     if (filters.sortBy) queryParams.append("sortBy", filters.sortBy);
     if (filters.sortOrder) queryParams.append("sortOrder", filters.sortOrder);
     if (filters.page) queryParams.append("page", filters.page.toString());
@@ -34,6 +36,19 @@ export async function fetchGearItems(filters: IGearFilterRequest) {
       data: [],
       meta: { page: 1, limit: 10, total: 0, totalPages: 1 },
     };
+  }
+}
+
+export async function fetchGearAvailability(gearId: string, startDate: string, endDate: string) {
+  try {
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL;
+    const query = new URLSearchParams({ startDate, endDate });
+    const res = await fetch(`${backendUrl}/gear/${gearId}/availability?${query}`, { cache: "no-store" });
+    const result = await res.json();
+    return res.ok && result.success ? result.data : null;
+  } catch (error) {
+    console.error("Error fetching gear availability:", error);
+    return null;
   }
 }
 

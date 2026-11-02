@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Store, ArrowLeft } from "lucide-react";
 import Link from "next/link";
 import GearReview from "../_components/GearReview";
+import OrderStatusTimeline from "./_components/OrderStatusTimeline";
 
 interface DetailsPageProps {
   params: Promise<{ id: string }>;
@@ -87,6 +88,8 @@ export default async function RentalDetailsPage({ params }: DetailsPageProps) {
           </div>
         </div>
       </div>
+
+      <OrderStatusTimeline history={rental.statusHistory} currentStatus={rental.status} />
 
       {/* Ordered Gear Items */}
       <div

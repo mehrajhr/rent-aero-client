@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import { format } from "date-fns";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -17,6 +18,7 @@ import {
 export default function GearFilterSidebar() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const today = format(new Date(), "yyyy-MM-dd");
 
   const [searchTerm, setSearchTerm] = useState(searchParams.get("searchTerm") || "");
   const [category, setCategory] = useState(searchParams.get("category") || "all");
@@ -24,8 +26,20 @@ export default function GearFilterSidebar() {
   const [minPrice, setMinPrice] = useState(searchParams.get("minPrice") || "");
   const [maxPrice, setMaxPrice] = useState(searchParams.get("maxPrice") || "");
   const [isAvailable, setIsAvailable] = useState(searchParams.get("isAvailable") || "all");
+  const [startDate, setStartDate] = useState(searchParams.get("startDate") || "");
+  const [endDate, setEndDate] = useState(searchParams.get("endDate") || "");
+  const [dateError, setDateError] = useState("");
 
   const applyFilters = () => {
+    if (Boolean(startDate) !== Boolean(endDate)) {
+      setDateError("Choose both rental dates, or clear both.");
+      return;
+    }
+    if (startDate && endDate && endDate <= startDate) {
+      setDateError("End date must be after the start date.");
+      return;
+    }
+    setDateError("");
     const params = new URLSearchParams();
 
     if (searchTerm) params.set("searchTerm", searchTerm);
@@ -34,6 +48,7 @@ export default function GearFilterSidebar() {
     if (minPrice) params.set("minPrice", minPrice);
     if (maxPrice) params.set("maxPrice", maxPrice);
     if (isAvailable !== "all") params.set("isAvailable", isAvailable);
+    if (startDate && endDate) { params.set("startDate", startDate); params.set("endDate", endDate); }
 
     params.set("page", "1");
     router.push(`/gear?${params.toString()}`);
@@ -46,6 +61,9 @@ export default function GearFilterSidebar() {
     setMinPrice("");
     setMaxPrice("");
     setIsAvailable("all");
+    setStartDate("");
+    setEndDate("");
+    setDateError("");
     router.push("/gear");
   };
 
@@ -58,6 +76,14 @@ export default function GearFilterSidebar() {
         <Button variant="ghost" size="sm" onClick={handleReset} className="h-8 text-xs text-muted-foreground">
           <RotateCcw className="h-3.5 w-3.5 mr-1" /> Reset
         </Button>
+      </div>
+
+      <div className="space-y-2">
+        <Label className="text-xs font-semibold">Rental dates (optional)</Label>
+        <Input aria-label="Rental start date" type="date" min={today} value={startDate} onChange={(e) => { setStartDate(e.target.value); setDateError(""); }} className="text-sm" />
+        <Input aria-label="Rental end date" type="date" min={startDate || today} value={endDate} onChange={(e) => { setEndDate(e.target.value); setDateError(""); }} className="text-sm" />
+        {dateError && <p role="alert" className="text-xs text-destructive">{dateError}</p>}
+        <p className="text-xs text-muted-foreground">Show gear with stock available for the whole period.</p>
       </div>
 
       <div className="space-y-2">

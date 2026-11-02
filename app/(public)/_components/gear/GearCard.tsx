@@ -6,9 +6,14 @@ import { IGearItem } from "../../_types/gear.types";
 
 interface GearCardProps {
   gear: IGearItem;
+  startDate?: string;
+  endDate?: string;
 }
 
-export default function GearCard({ gear }: GearCardProps) {
+export default function GearCard({ gear, startDate, endDate }: GearCardProps) {
+  const detailQuery = new URLSearchParams();
+  if (startDate) detailQuery.set("startDate", startDate);
+  if (endDate) detailQuery.set("endDate", endDate);
   return (
     <div className="group rounded-xl border bg-card overflow-hidden shadow-sm hover:shadow-md transition-all duration-200 flex flex-col justify-between p-5 space-y-4">
       <div className="space-y-3">
@@ -23,7 +28,7 @@ export default function GearCard({ gear }: GearCardProps) {
             gear.isAvailable ? "bg-green-500/10 text-green-600" : "bg-red-500/10 text-red-600"
           }`}>
             {gear.isAvailable ? <CheckCircle2 className="h-3 w-3" /> : <XCircle className="h-3 w-3" />}
-            {gear.isAvailable ? "Available" : "Rented Out"}
+            {startDate && endDate ? `${gear.availableStock ?? 0} available for dates` : gear.isAvailable ? "Available" : "Rented Out"}
           </span>
         </div>
 
@@ -60,7 +65,7 @@ export default function GearCard({ gear }: GearCardProps) {
       </div>
 
       <Button asChild className="w-full" size="sm">
-        <Link href={`/gear/${gear.id}`}>View Details & Rent</Link>
+        <Link href={`/gear/${gear.id}${detailQuery.size ? `?${detailQuery}` : ""}`}>View Details & Rent</Link>
       </Button>
     </div>
   );

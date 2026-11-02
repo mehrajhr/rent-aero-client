@@ -5,6 +5,7 @@ export interface IGearItem {
   brand: string;
   pricePerDay: number;
   stock: number;
+  availableStock?: number;
   isAvailable: boolean;
   specifications: Record<string, string | number | boolean> | null;
   providerId: string;
@@ -47,6 +48,8 @@ export interface IGearFilterRequest {
   minPrice?: number;
   maxPrice?: number;
   isAvailable?: boolean;
+  startDate?: string;
+  endDate?: string;
   sortBy?: string;
   sortOrder?: "asc" | "desc";
   page?: number;

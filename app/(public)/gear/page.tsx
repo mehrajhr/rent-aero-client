@@ -17,6 +17,8 @@ export default async function GearPage({ searchParams }: PageProps) {
     minPrice: filters.minPrice ? Number(filters.minPrice) : undefined,
     maxPrice: filters.maxPrice ? Number(filters.maxPrice) : undefined,
     isAvailable: filters.isAvailable ? filters.isAvailable === "true" : undefined,
+    startDate: filters.startDate,
+    endDate: filters.endDate,
     sortBy: filters.sortBy || "createdAt",
     sortOrder: (filters.sortOrder as "asc" | "desc") || "desc",
     page: filters.page ? Number(filters.page) : 1,
@@ -58,7 +60,7 @@ export default async function GearPage({ searchParams }: PageProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {gearItems.map((gear) => (
-                <GearCard key={gear.id} gear={gear} />
+                <GearCard key={gear.id} gear={gear} startDate={filters.startDate} endDate={filters.endDate} />
               ))}
             </div>
           )}
