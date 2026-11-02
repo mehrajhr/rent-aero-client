@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,17 @@ import { loginUser } from "../_action/authAction";
 const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
   const [state, action, isPending] = useActionState(loginUser, false);
   const router = useRouter();
+  const emailInput = useRef<HTMLInputElement>(null);
+  const passwordInput = useRef<HTMLInputElement>(null);
+
+  const fillAdminCredentials = () => {
+    if (emailInput.current) {
+      emailInput.current.value = "admin@gmail.com";
+    }
+    if (passwordInput.current) {
+      passwordInput.current.value = "mehraj1234";
+    }
+  };
 
   useEffect(() => {
     if (!state || isPending) {
@@ -32,6 +43,7 @@ const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
       <div className="space-y-2">
         <Label htmlFor="email">Email</Label>
         <Input
+          ref={emailInput}
           id="email"
           name="email"
           type="email"
@@ -43,6 +55,7 @@ const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
       <div className="space-y-2">
         <Label htmlFor="password">Password</Label>
         <Input
+          ref={passwordInput}
           id="password"
           name="password"
           type="password"
@@ -50,6 +63,15 @@ const LoginForm = ({ redirectTo }: { redirectTo: string }) => {
           required
         />
       </div>
+
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={fillAdminCredentials}
+      >
+        Login as admin
+      </Button>
 
       <Button type="submit" className="w-full" disabled={isPending}>
         {isPending ? "Logging in..." : "Login"}
