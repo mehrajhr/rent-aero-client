@@ -46,10 +46,19 @@ export async function fetchRentalDetails(id: string) {
 
     const rental = result.data;
     if (rental.status === "RETURNED" && rental.items?.length) {
-      const gearIds = [...new Set(rental.items.map((item: any) => item.gearId))];
+      const gearIds = Array.from(
+        new Set(
+          rental.items
+            .map((item: { gearId?: unknown }) => item.gearId)
+            .filter(
+              (gearId: unknown): gearId is string =>
+                typeof gearId === "string" && gearId.length > 0,
+            ),
+        ),
+      );
       const reviewsByGearId = Object.fromEntries(
         await Promise.all(
-          gearIds.map(async (gearId: string) => {
+          gearIds.map(async (gearId) => {
             try {
               const gearRes = await fetch(`${backendUrl}/gear/${gearId}`, {
                 cache: "no-store",
